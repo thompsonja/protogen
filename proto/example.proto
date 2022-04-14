@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/thompsonja/genproto/example";
+
+package example;
+
+service Example {
+  rpc SomeFunc(SomeRequest) returns (SomeReply) {}
+}
+
+message SomeRequest {
+  google.protobuf.Timestamp some_time = 1;
+}
+
+message SomeReply {
+  string response = 1;
+}

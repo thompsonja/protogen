@@ -1,0 +1,31 @@
+name: Check proto generation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'proto/**'
+  pull_request:
+    paths:
+      - 'proto/**'
+
+jobs:
+  # This job first makes sure that protos can be generated.
+  # Then it makes sure that the generated protos are up-to-date.
+  check_proto_generation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate proto files
+        run: ./proto/gen.sh
+      - name: Check git status --porcelain
+        run: |
+          status="$(git status --porcelain)"
+          echo "${status}"
+          if [[ -n "${status}" ]]; then
+            echo "Proto files were not regenerated!"
+            echo "Run the following and add generated files to your commit:"
+            echo "  ./proto/gen.sh"
+            exit 1
+          fi
